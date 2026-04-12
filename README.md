@@ -1,1 +1,1 @@
-# MEA-closed-loop-neural-stimulation-for-reinforcement-learning
+# MEA-closed-loop-neural-stimulation-and-recording
