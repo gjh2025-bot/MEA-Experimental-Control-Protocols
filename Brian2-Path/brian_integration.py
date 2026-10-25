@@ -7,11 +7,35 @@ prefs.codegen.target = "numpy"
 import numpy as np
 import gymnasium as gym
 
+#Modify the #12-#16 Line into the following code under "'''" Line #18-#38
+'''
 class Brian2CartPoleIntegration:
     def __init__(self):
         self.env = gym.make('CartPole-v1')
         self.mea_simulator = Brian2MEASimulator(num_channels=60, buffer_size=100)
+        self.mea_simulator.connect_to_device()'''
+
+class Brian2CartPoleIntegration:
+    def __init__(self, mode="training"):
+
+        if mode not in ("training", "silent"):
+            raise ValueError("Invalid experiment mode")
+
+        self.mode = mode
+
+        self.env = gym.make('CartPole-v1')
+        self.mea_simulator = Brian2MEASimulator(
+            num_channels=60,
+            buffer_size=100
+        )
+        
         self.mea_simulator.connect_to_device()
+                if self.mode == "silent":
+            self.mea_simulator.neurons.I = 0
+            self.mea_simulator.reward_trace = 0.0
+
+            for syn in self.mea_simulator.synapses.values():
+                syn.reward[:] = 0.0
 
         self.total_reward = 0
         self.episode_rewards = []
