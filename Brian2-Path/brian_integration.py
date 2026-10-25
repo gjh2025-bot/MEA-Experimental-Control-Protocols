@@ -60,7 +60,26 @@ class Brian2CartPoleIntegration:
 
         pole_angle = obs[2]
         pole_angular_velocity = obs[3]
+
+#Modify the line #66 into #68-#81: 
+        '''
         self.mea_simulator.stimulate_neurons(pole_angle, pole_angular_velocity, reward)
+        '''
+        if self.mode == "training":
+
+            self.mea_simulator.stimulate_neurons(
+                pole_angle,
+                pole_angular_velocity,
+                reward)
+
+        elif self.mode == "silent":
+
+            # Disable external stimulation
+            self.mea_simulator.neurons.I = 0
+
+            # Advance simulation without stimulation
+            self.mea_simulator.run_simulation(100)
+        
 
         done = terminated or truncated
         if done:
@@ -119,7 +138,20 @@ class Brian2CartPoleIntegration:
         plt.tight_layout()
         plt.show()
 
+
+#Modify Line #144-#147 into #149-#158
+'''
 if __name__ == '__main__':
     integration = Brian2CartPoleIntegration()
     integration.train(num_episodes=100, render=False)
-    integration.visualize_network_activity(duration=1000)
+    integration.visualize_network_activity(duration=1000)'''
+
+if __name__ == '__main__':
+    integration = Brian2CartPoleIntegration(
+        mode="silent"
+    )
+    
+    integration.train(
+        num_episodes=100,
+        render=False
+    )
