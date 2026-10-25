@@ -5,8 +5,10 @@ import csv
 from datetime import datetime
 from mea_integration import IntegratedMEAInterface
 from openai_integration import IntegratedOpenAIGymAPI
- 
- 
+
+#Add the following Control_mode = silent
+CONTROL_MODE = "silent"
+
 def save_episode_data(episode_steps, episode_rewards, timestamp):
     """Save episode data to a CSV file"""
     filename = f"cartpole_episode_data_{timestamp}.csv"
@@ -72,8 +74,21 @@ def run_integrated_dishbrain():
  
             while not done:
                 time.sleep(0.05)
+             
+  #Modify the Line #79-#80 into #82-#89: so that in silent mode, the device kepp process on recording, decoding and CartPole update, without stimulation implemented. 
+               ''' 
                 pole_angle, pole_angular_velocity, reward, terminated = gym_api.run_single_frame()
                 mea_interface.stimulate_neurons(pole_angle, pole_angular_velocity, reward)
+                '''
+                pole_angle, pole_angular_velocity, reward, terminated = gym_api.run_single_frame()
+
+                if CONTROL_MODE == "training":
+                   mea_interface.stimulate_neurons(
+                       pole_angle,
+                       pole_angular_velocity,
+                       reward
+                   )
+         
                 done = terminated
                 step_count += 1
  
