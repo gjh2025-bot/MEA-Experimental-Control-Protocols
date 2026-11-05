@@ -30,7 +30,8 @@ class Brian2CartPoleIntegration:
         )
         
         self.mea_simulator.connect_to_device()
-                if self.mode == "silent":
+
+        if self.mode == "silent":
             self.mea_simulator.neurons.I = 0
             self.mea_simulator.reward_trace = 0.0
 
